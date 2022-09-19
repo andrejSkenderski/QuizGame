@@ -12,16 +12,13 @@ import kotlinx.android.synthetic.main.activity_quiz_questions.*
 
 class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var mCurrentPosition: Int = 1 // Default and the first question position
+    private var mCurrentPosition: Int = 1
     private var mQuestionsList: ArrayList<Question>? = null
 
     private var mSelectedOptionPosition: Int = 0
     private var mCorrectAnswers: Int = 0
 
-    // TODO (STEP 3: Create a variable for getting the name from intent.)
-    // START
     private var mUserName: String? = null
-    // END
 
     /**
      * This function is auto created by Android when the Activity Class is created.
