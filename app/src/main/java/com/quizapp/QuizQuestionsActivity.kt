@@ -9,11 +9,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_quiz_questions.*
+import java.util.Collections.shuffle
 
 class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mCurrentPosition: Int = 1 // Default and the first question position
-    private var mQuestionsList: ArrayList<Question>? = null
+    private var mQuestionsList = Constants.getQuestions()
 
     private var mSelectedOptionPosition: Int = 0
     private var mCorrectAnswers: Int = 0
@@ -37,7 +38,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         mUserName = intent.getStringExtra(Constants.USER_NAME)
         // END
 
-        mQuestionsList = Constants.getQuestions()
+        shuffle(mQuestionsList)
 
         setQuestion()
 
@@ -80,7 +81,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
                     when {
 
-                        mCurrentPosition <= mQuestionsList!!.size -> {
+                        mCurrentPosition <= Constants.MAX_QUESTIONS -> {
 
                             setQuestion()
                         }
@@ -89,37 +90,36 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                             // TODO (STEP 5: Now remove the toast message and launch the result screen which we have created and also pass the user name and score details to it.)
                             // START
                             val intent =
-                                    Intent(this@QuizQuestionsActivity, ResultActivity::class.java)
+                                Intent(this@QuizQuestionsActivity, ResultActivity::class.java)
                             intent.putExtra(Constants.USER_NAME, mUserName)
                             intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
-                            intent.putExtra(Constants.TOTAL_QUESTIONS, 15)
+                            intent.putExtra(Constants.TOTAL_QUESTIONS, Constants.MAX_QUESTIONS)
                             startActivity(intent)
                             finish()
                             // END
                         }
                     }
                 } else {
-                    val question = mQuestionsList?.get(mCurrentPosition - 1)
+                    val question = mQuestionsList.get(mCurrentPosition - 1)
 
                     // This is to check if the answer is wrong
-                    if (question!!.correctAnswer != mSelectedOptionPosition) {
+                    if (question.correctAnswer != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
                         val intent =
                             Intent(this@QuizQuestionsActivity, ResultActivity::class.java)
                         intent.putExtra(Constants.USER_NAME, mUserName)
                         intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
-                        intent.putExtra(Constants.TOTAL_QUESTIONS, 15)
+                        intent.putExtra(Constants.TOTAL_QUESTIONS, Constants.MAX_QUESTIONS)
                         startActivity(intent)
                         finish()
-                    }
-                    else {
+                    } else {
                         mCorrectAnswers++
                     }
 
                     // This is for correct answer
                     answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
 
-                    if (mCurrentPosition == mQuestionsList!!.size) {
+                    if (mCurrentPosition == Constants.MAX_QUESTIONS) {
                         btn_submit.text = "FINISH"
                     } else {
                         btn_submit.text = "GO TO NEXT QUESTION"
@@ -136,18 +136,15 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun setQuestion() {
 
-        val question = mQuestionsList!!.get(mCurrentPosition - 1) // Getting the question from the list with the help of current position.
+        val question =
+            mQuestionsList.get(mCurrentPosition - 1) // Getting the question from the list with the help of current position.
 
         defaultOptionsView()
 
-        if (mCurrentPosition == mQuestionsList!!.size) {
-            btn_submit.text = "FINISH"
-        } else {
-            btn_submit.text = "SUBMIT"
-        }
+        btn_submit.text = "SUBMIT"
 
         progressBar.progress = mCurrentPosition
-        tv_progress.text = "$mCurrentPosition" + "/" + progressBar.getMax()
+        tv_progress.text = "${mCurrentPosition} /  ${progressBar.max}"
 
         tv_question.text = question.question
         tv_option_one.text = question.optionOne
@@ -170,8 +167,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         )
         tv.setTypeface(tv.typeface, Typeface.BOLD)
         tv.background = ContextCompat.getDrawable(
-                this@QuizQuestionsActivity,
-                R.drawable.selected_option_border_bg
+            this@QuizQuestionsActivity,
+            R.drawable.selected_option_border_bg
         )
     }
 
@@ -190,8 +187,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
             option.setTextColor(Color.parseColor("#7A8089"))
             option.typeface = Typeface.DEFAULT
             option.background = ContextCompat.getDrawable(
-                    this@QuizQuestionsActivity,
-                    R.drawable.default_option_border_bg
+                this@QuizQuestionsActivity,
+                R.drawable.default_option_border_bg
             )
         }
     }
@@ -205,26 +202,26 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
             1 -> {
                 tv_option_one.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             2 -> {
                 tv_option_two.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             3 -> {
                 tv_option_three.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
             4 -> {
                 tv_option_four.background = ContextCompat.getDrawable(
-                        this@QuizQuestionsActivity,
-                        drawableView
+                    this@QuizQuestionsActivity,
+                    drawableView
                 )
             }
         }
