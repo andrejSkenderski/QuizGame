@@ -53,26 +53,21 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                 selectedOptionView(tv_option_four, 4)
             }
             R.id.btn_submit -> {
-
                 if (mSelectedOptionPosition == 0) {
-
                     mCurrentPosition++
 
                     when {
-
                         mCurrentPosition <= Constants.MAX_QUESTIONS -> {
-
                             setQuestion()
                         }
                         else -> {
                             val intent =
-                                    Intent(this@QuizQuestionsActivity, ResultActivity::class.java)
+                                Intent(this@QuizQuestionsActivity, ResultActivity::class.java)
                             intent.putExtra(Constants.USER_NAME, mUserName)
                             intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
                             intent.putExtra(Constants.TOTAL_QUESTIONS, Constants.MAX_QUESTIONS)
                             startActivity(intent)
                             finish()
-
                         }
                     }
                 } else {
@@ -80,7 +75,7 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
                     if (question.correctAnswer != mSelectedOptionPosition) {
                         answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
-                        val correct = question!!.correctAnswer
+                        val correct = question.correctAnswer
                         val fragmentPopUp = WrongAnswerFragment()
                         val bundle = Bundle()
                         bundle.putString("wrongAns", mSelectedOptionPosition.toString())
@@ -88,12 +83,10 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                         bundle.putString("userName", mUserName)
                         bundle.putString("CorrectAnsTotal", mCorrectAnswers.toString())
                         bundle.putString("TotalQuestions", Constants.MAX_QUESTIONS.toString())
-                        fragmentPopUp.setArguments(bundle)
-
+                        fragmentPopUp.arguments = bundle
                         fragmentPopUp.show(supportFragmentManager, "customWrongAnswer")
 
-                    }
-                    else {
+                    } else {
                         mCorrectAnswers++
                     }
 
